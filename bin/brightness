@@ -1,0 +1,24 @@
+#!/bin/bash
+# Réglage de luminosité pour les deux écrans (ajustement logiciel xrandr)
+# Usage : brightness [0.2-1.0]         -> règle les deux écrans
+#       brightness 0.7 HDMI-1         -> règle un seul écran
+VAL="${1:-0.8}"
+TARGET="${2:-both}"
+export DISPLAY="${DISPLAY:-:0}"
+export XAUTHORITY="${XAUTHORITY:-/var/run/lightdm/root/:0}"
+
+case "$TARGET" in
+    HDMI-1|HDMI-2|DP-1|DP-2|DP-3)
+        xrandr --output "$TARGET" --brightness "$VAL"
+        echo "Luminosité $TARGET réglée à $VAL"
+        ;;
+    both|"")
+        for out in $(xrandr --current 2>/dev/null | awk '/ connected/{print $1}'); do
+            xrandr --output "$out" --brightness "$VAL" 2>/dev/null && echo "Luminosité $out réglée à $VAL"
+        done
+        ;;
+    *)
+        echo "Cible invalide: $TARGET (utiliser: both, HDMI-1, HDMI-2)"
+        exit 1
+        ;;
+esac

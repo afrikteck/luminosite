@@ -1,0 +1,6 @@
+[Desktop Entry]
+Type=Application
+Name=Luminosite DP-3
+Exec=brightness 0.8
+Comment=Applique le reglage logiciel de luminosite au demarrage
+X-GNOME-Autostart-enabled=true
